@@ -1,6 +1,6 @@
 import json, datetime, imaplib, functools, ssl
 from PyQt5 import QtWidgets, uic, QtCore
-from utils import paths
+from utils import paths, StorageSingleton
 from ui.utils import helpers
 
 import logging
@@ -12,6 +12,16 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
 
         self.data = []
+        #load data
+        for index in range(StorageSingleton().getListSize()):
+            self.createNewEmail()
+            singletonData = StorageSingleton().getDataAtIndex(index)
+            self.data[index]["email"].setText(singletonData["email"])
+            self.data[index]["password"].setText(singletonData["password"])
+            self.data[index]["emailServer"].setText(singletonData["emailServer"])
+            self.data[index]["port"].setValue(singletonData["port"])
+            self.data[index]["expiryDate"].setCurrentText(helpers.DateToDateString(singletonData["expiryDate"]))
+            self.data[index]["startTls"].setChecked(singletonData["startTls"])
 
         if len(self.data) == 0:
             self.createNewEmail()
@@ -36,9 +46,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiWidget_emails.addItem(listWidgetItem)
         self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
 
-        self.data.append({"uiItems": uiItems})
+        self.data.append(uiItems)
         uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
-        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, {"uiItems": uiItems}, listWidgetItem))
+        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
 
     def createEmailForm(self):
         uiLineEdit_email        = QtWidgets.QLineEdit()
@@ -78,15 +88,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def deleteNow(self, uiItems):
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
+        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmailAccount(self, items, listWidgetItem):
         listWidgetItem.setHidden(True)
         del self.data[self.data.index(items)]
+        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmailsAllAccounts(self):
         if len(self.data) != 0:
             for emailAccount in self.data:
-                self.deleteEmails(helpers.uiItemsToValues(emailAccount["uiItems"]))
+                self.deleteEmails(helpers.uiItemsToValues(emailAccount))
+        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmails(self, emailValues):
         # Check if all credentials were entered
