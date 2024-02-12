@@ -49,16 +49,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.data.append(uiItems)
         uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
         uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
+        uiItems["saveCredentials"].clicked.connect(self.store)
 
     def createEmailForm(self):
-        uiLineEdit_email        = QtWidgets.QLineEdit()
-        uiLineEdit_password     = QtWidgets.QLineEdit()
-        uiLineEdit_emailServer  = QtWidgets.QLineEdit()
-        uiSpinBox_port          = QtWidgets.QSpinBox()
-        uiCombobox_expiryDate   = QtWidgets.QComboBox()
-        uiCheckbox_startTls     = QtWidgets.QCheckBox()
-        uiButton_deleteNow      = QtWidgets.QPushButton('Delete emails', self)
-        uiButton_deleteEmail    = QtWidgets.QPushButton('-', self)
+        uiLineEdit_email            = QtWidgets.QLineEdit()
+        uiLineEdit_password         = QtWidgets.QLineEdit()
+        uiLineEdit_emailServer      = QtWidgets.QLineEdit()
+        uiSpinBox_port              = QtWidgets.QSpinBox()
+        uiCombobox_expiryDate       = QtWidgets.QComboBox()
+        uiCheckbox_startTls         = QtWidgets.QCheckBox()
+        uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails', self)
+        uiButton_deleteEmail        = QtWidgets.QPushButton('-', self)
+        uiButton_saveCredentials    = QtWidgets.QPushButton('save', self)
 
         uiSpinBox_port.setMaximum(99999)
         uiSpinBox_port.setValue(933)
@@ -72,33 +74,38 @@ class MainWindow(QtWidgets.QMainWindow):
         formLayout.addRow(QtWidgets.QLabel("Port"), uiSpinBox_port)
         formLayout.addRow(QtWidgets.QLabel("Expirydate"), uiCombobox_expiryDate)
         formLayout.addRow(QtWidgets.QLabel("start_tls"), uiCheckbox_startTls)
-        formLayout.addRow(uiButton_deleteEmail, uiButton_deleteNow)
+        formLayout.addRow(uiButton_deleteEmail, uiButton_saveCredentials)
+        formLayout.addRow(uiButton_deleteNow)
 
-        uiItems = {"email":         uiLineEdit_email, 
-                   "password":      uiLineEdit_password, 
-                   "emailServer":   uiLineEdit_emailServer, 
-                   "port":          uiSpinBox_port,
-                   "expiryDate":    uiCombobox_expiryDate,
-                   "startTls":      uiCheckbox_startTls,
-                   "deleteNow":     uiButton_deleteNow,
-                   "deleteEmail":   uiButton_deleteEmail
+        uiItems = {"email":           uiLineEdit_email, 
+                   "password":        uiLineEdit_password, 
+                   "emailServer":     uiLineEdit_emailServer, 
+                   "port":            uiSpinBox_port,
+                   "expiryDate":      uiCombobox_expiryDate,
+                   "startTls":        uiCheckbox_startTls,
+                   "deleteNow":       uiButton_deleteNow,
+                   "deleteEmail":     uiButton_deleteEmail,
+                   "saveCredentials": uiButton_saveCredentials
                 }
 
         return (formLayout, uiItems)
 
     def deleteNow(self, uiItems):
+        self.store()
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
-        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmailAccount(self, items, listWidgetItem):
         listWidgetItem.setHidden(True)
         del self.data[self.data.index(items)]
-        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
+        self.store()
 
     def deleteEmailsAllAccounts(self):
+        self.store()
         if len(self.data) != 0:
             for emailAccount in self.data:
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
+
+    def store(self):
         StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmails(self, emailValues):
