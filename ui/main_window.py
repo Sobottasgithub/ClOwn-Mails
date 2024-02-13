@@ -26,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if len(self.data) == 0:
             self.createNewEmail()
         self.uiButton_add.clicked.connect(self.createNewEmail)
+        self.uiButton_save.clicked.connect(self.store)
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.deleteEmailsAllAccounts)
@@ -49,7 +50,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.data.append(uiItems)
         uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
         uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
-        uiItems["saveCredentials"].clicked.connect(self.store)
 
     def createEmailForm(self):
         uiLineEdit_email            = QtWidgets.QLineEdit()
@@ -60,7 +60,6 @@ class MainWindow(QtWidgets.QMainWindow):
         uiCheckbox_startTls         = QtWidgets.QCheckBox()
         uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails', self)
         uiButton_deleteEmail        = QtWidgets.QPushButton('-', self)
-        uiButton_saveCredentials    = QtWidgets.QPushButton('save', self)
 
         uiSpinBox_port.setMaximum(99999)
         uiSpinBox_port.setValue(933)
@@ -74,8 +73,7 @@ class MainWindow(QtWidgets.QMainWindow):
         formLayout.addRow(QtWidgets.QLabel("Port"), uiSpinBox_port)
         formLayout.addRow(QtWidgets.QLabel("Expirydate"), uiCombobox_expiryDate)
         formLayout.addRow(QtWidgets.QLabel("start_tls"), uiCheckbox_startTls)
-        formLayout.addRow(uiButton_deleteEmail, uiButton_saveCredentials)
-        formLayout.addRow(uiButton_deleteNow)
+        formLayout.addRow(uiButton_deleteEmail, uiButton_deleteNow)
 
         uiItems = {"email":           uiLineEdit_email, 
                    "password":        uiLineEdit_password, 
@@ -85,7 +83,6 @@ class MainWindow(QtWidgets.QMainWindow):
                    "startTls":        uiCheckbox_startTls,
                    "deleteNow":       uiButton_deleteNow,
                    "deleteEmail":     uiButton_deleteEmail,
-                   "saveCredentials": uiButton_saveCredentials
                 }
 
         return (formLayout, uiItems)
