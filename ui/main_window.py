@@ -1,7 +1,8 @@
-import json, datetime, imaplib, functools, ssl
+import datetime, imaplib, functools, ssl
 from PyQt5 import QtWidgets, uic, QtCore
 from utils import paths, StorageSingleton
 from ui.utils import helpers
+from .about_dialog import AboutDialog
 
 import logging
 logger = logging.getLogger(__name__)
@@ -10,6 +11,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
+
+        self.uiAction_about.triggered.connect(self.actionAbout)
 
         self.data = []
         #load data
@@ -138,3 +141,9 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as error:
             helpers.createMessageWindow(self, error)
             return
+        
+    def actionAbout(self, *args):
+        logger.info("Showing About Dialog...")
+        self.about = AboutDialog()
+        self.about.show()
+        result = self.about.exec_()
