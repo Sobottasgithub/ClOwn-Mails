@@ -93,9 +93,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def deleteNow(self, uiItems):
         self.store()
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
+        self.statusBar.showMessage("Deleted ✓",2000)
 
     def deleteEmailAccount(self, items, listWidgetItem):
         listWidgetItem.setHidden(True)
+        self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
         del self.data[self.data.index(items)]
         self.store()
 
@@ -106,6 +108,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
 
     def store(self):
+        self.statusBar.showMessage("Saved ✓", 2000)
         StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
 
     def deleteEmails(self, emailValues):
@@ -119,15 +122,18 @@ class MainWindow(QtWidgets.QMainWindow):
                 tls_context = ssl.create_default_context()
             
             # Connect to server
+            self.statusBar.showMessage("Connecting to server...")
             serverConnection = imaplib.IMAP4_SSL(emailValues["emailServer"], emailValues["port"])
             if emailValues["startTls"]:
                 serverConnection.starttls(ssl_context=tls_context)
+            self.statusBar.showMessage("Logging in...")
             serverConnection.login(emailValues["email"], emailValues["password"])
 
             # Search for emails
             serverConnection.select('Inbox')
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
 
+            self.statusBar.showMessage("Deleting ...")
             resp, data = serverConnection.uid('search',None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
             uids = data[0].split()    
             for uid in uids:
@@ -137,8 +143,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 
             serverConnection.close()
             serverConnection.logout()
+            self.statusBar.showMessage("Complete ✓", 2000)
 
         except Exception as error:
+            self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
             helpers.createMessageWindow(self, error)
             return
         
