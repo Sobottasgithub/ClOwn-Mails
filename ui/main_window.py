@@ -17,7 +17,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiItems = []
         #load data
         for index in range(len(StorageSingleton()["data"])):
-            self.createNewEmail()
+            self.uiItems.append(self.createEmailForm())
             singletonData = StorageSingleton()["data"][index]
             self.uiItems[index]["email"].setText(singletonData["email"])
             self.uiItems[index]["password"].setText(singletonData["password"])
@@ -27,32 +27,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
 
         if len(self.uiItems) == 0:
-            self.createNewEmail()
-        self.uiButton_add.clicked.connect(self.createNewEmail)
+            self.uiItems.append(self.createEmailForm())
+        self.uiButton_add.clicked.connect(self.addNewEmail)
         self.uiButton_save.clicked.connect(self.store)
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.deleteEmailsAllAccounts)
         self.timer.start(36000000)
     
-    def createNewEmail(self):
-        formLayout, uiItems = self.createEmailForm()
-
-        # Put QForm in a widget
-        formWidget = QtWidgets.QWidget()
-        formWidget.setLayout(formLayout)
-
-        # Put widget in a qlistwidget item
-        listWidgetItem = QtWidgets.QListWidgetItem()
-        listWidgetItem.setSizeHint(formWidget.sizeHint())
-
-        # Add everything into the Listwidget
-        self.uiWidget_emails.addItem(listWidgetItem)
-        self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
-
-        self.uiItems.append(uiItems)
-        uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
-        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
+    def addNewEmail(self):
+        self.uiItems.append(self.createEmailForm())
 
     def createEmailForm(self):
         uiLineEdit_email            = QtWidgets.QLineEdit()
@@ -88,7 +72,22 @@ class MainWindow(QtWidgets.QMainWindow):
                    "deleteEmail":     uiButton_deleteEmail,
                 }
 
-        return (formLayout, uiItems)
+        # Put QForm in a widget
+        formWidget = QtWidgets.QWidget()
+        formWidget.setLayout(formLayout)
+
+        # Put widget in a qlistwidget item
+        listWidgetItem = QtWidgets.QListWidgetItem()
+        listWidgetItem.setSizeHint(formWidget.sizeHint())
+
+        # Add everything into the Listwidget
+        self.uiWidget_emails.addItem(listWidgetItem)
+        self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
+
+        uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
+        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
+
+        return uiItems
 
     def deleteNow(self, uiItems):
         self.store()
