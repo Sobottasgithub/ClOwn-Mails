@@ -20,6 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for index in range(len(StorageSingleton()["data"])):
             self.uiItems.append(self.createEmailForm())
             singletonData = StorageSingleton()["data"][index]
+            logger.info("Create email form for %s" % singletonData["email"])
             self.uiItems[index]["email"].setText(singletonData["email"])
             self.uiItems[index]["password"].setText(singletonData["password"])
             self.uiItems[index]["emailServer"].setText(singletonData["emailServer"])
@@ -37,9 +38,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.start(36000000)
     
     def addNewEmail(self):
+        logger.info("Add new Email")
         self.uiItems.append(self.createEmailForm())
 
     def createEmailForm(self):
+        logger.info("Create ui Items")
         uiLineEdit_email            = QtWidgets.QLineEdit()
         uiLineEdit_password         = QtWidgets.QLineEdit()
         uiLineEdit_emailServer      = QtWidgets.QLineEdit()
@@ -54,6 +57,8 @@ class MainWindow(QtWidgets.QMainWindow):
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
 
+
+        logger.info("Create email form")
         # Add items to QForm
         formLayout = QtWidgets.QFormLayout()
         formLayout.addRow(QtWidgets.QLabel("Email"), uiLineEdit_email)
@@ -74,6 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
                    "deleteEmail":     uiButton_deleteEmail,
                 }
 
+        logger.info("Add items")
         # Put QForm in a widget
         formWidget = QtWidgets.QWidget()
         formWidget.setLayout(formLayout)
@@ -86,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiWidget_emails.addItem(listWidgetItem)
         self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
 
+        logger.info("Connect buttons")
         uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
         uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
 
@@ -93,10 +100,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def deleteNow(self, uiItems):
         self.store()
+        logger.info("Delete all emails of %s before date" % str(uiItems["email"].text()))
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
         self.statusBar.showMessage("Deleted ✓",2000)
 
     def deleteEmailAccount(self, items, listWidgetItem):
+        logger.info("Delete email form")
         listWidgetItem.setHidden(True)
         self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
         del self.uiItems[self.uiItems.index(items)]
@@ -104,11 +113,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def deleteEmailsAllAccounts(self):
         self.store()
+        logger.info("Delete emails from all accounts")
         if len(self.uiItems) != 0:
             for emailAccount in self.uiItems:
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
 
     def store(self):
+        logger.info("Store data")
         self.statusBar.showMessage("Saved ✓", 2000)
         StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
 
@@ -120,33 +131,41 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
         try:
             if emailValues["startTls"]:
+                logger.info("establishe connection with start_tls")
                 tls_context = ssl.create_default_context()
             
             # Connect to server
             self.statusBar.showMessage("Connecting to server...")
+            logger.info("Connecting to server...")
             serverConnection = imaplib.IMAP4_SSL(emailValues["emailServer"], emailValues["port"])
             if emailValues["startTls"]:
                 serverConnection.starttls(ssl_context=tls_context)
             self.statusBar.showMessage("Logging in...")
+            logger.info("Logging in...")
             serverConnection.login(emailValues["email"], emailValues["password"])
 
             # Search for emails
             serverConnection.select('Inbox')
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
+            logger.info("Deleting everything before %s " % str(beforeDate))
 
             self.statusBar.showMessage("Deleting ...")
             resp, data = serverConnection.uid('search',None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
             uids = data[0].split()    
+            logger.info("Deleting %d mails" % len(uids))
             for uid in uids:
                 resp,data = serverConnection.uid('fetch',uid,"(BODY[HEADER])")             
                 serverConnection.uid('STORE',uid, '+FLAGS', '(\\Deleted)')
             serverConnection.expunge()
                 
+            logger.info("Logout")
             serverConnection.logout()
+            logger.info("Close connection")
             serverConnection.close()
             self.statusBar.showMessage("Complete ✓", 2000)
 
         except Exception as error:
+            logger.info("E R R O R while deleting emails! %s " % str(error))
             self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
             helpers.createMessageWindow(self, error)
             return
