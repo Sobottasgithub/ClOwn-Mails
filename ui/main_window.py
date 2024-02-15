@@ -14,19 +14,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.uiAction_about.triggered.connect(self.actionAbout)
 
-        self.data = []
+        self.uiItems = []
         #load data
-        for index in range(StorageSingleton().getListSize()):
+        for index in range(len(StorageSingleton()["data"])):
             self.createNewEmail()
-            singletonData = StorageSingleton().getDataAtIndex(index)
-            self.data[index]["email"].setText(singletonData["email"])
-            self.data[index]["password"].setText(singletonData["password"])
-            self.data[index]["emailServer"].setText(singletonData["emailServer"])
-            self.data[index]["port"].setValue(singletonData["port"])
-            self.data[index]["expiryDate"].setCurrentText(helpers.DateToDateString(singletonData["expiryDate"]))
-            self.data[index]["startTls"].setChecked(singletonData["startTls"])
+            singletonData = StorageSingleton()["data"][index]
+            self.uiItems[index]["email"].setText(singletonData["email"])
+            self.uiItems[index]["password"].setText(singletonData["password"])
+            self.uiItems[index]["emailServer"].setText(singletonData["emailServer"])
+            self.uiItems[index]["port"].setValue(singletonData["port"])
+            self.uiItems[index]["expiryDate"].setCurrentText(helpers.DateToDateString(singletonData["expiryDate"]))
+            self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
 
-        if len(self.data) == 0:
+        if len(self.uiItems) == 0:
             self.createNewEmail()
         self.uiButton_add.clicked.connect(self.createNewEmail)
         self.uiButton_save.clicked.connect(self.store)
@@ -50,7 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiWidget_emails.addItem(listWidgetItem)
         self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
 
-        self.data.append(uiItems)
+        self.uiItems.append(uiItems)
         uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
         uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
 
@@ -98,18 +98,18 @@ class MainWindow(QtWidgets.QMainWindow):
     def deleteEmailAccount(self, items, listWidgetItem):
         listWidgetItem.setHidden(True)
         self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
-        del self.data[self.data.index(items)]
+        del self.uiItems[self.uiItems.index(items)]
         self.store()
 
     def deleteEmailsAllAccounts(self):
         self.store()
-        if len(self.data) != 0:
-            for emailAccount in self.data:
+        if len(self.uiItems) != 0:
+            for emailAccount in self.uiItems:
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
 
     def store(self):
         self.statusBar.showMessage("Saved ✓", 2000)
-        StorageSingleton().setData([helpers.uiItemsToValues(data) for data in self.data])
+        StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
 
     def deleteEmails(self, emailValues):
         # Check if all credentials were entered
@@ -141,8 +141,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 serverConnection.uid('STORE',uid, '+FLAGS', '(\\Deleted)')
             serverConnection.expunge()
                 
-            serverConnection.close()
             serverConnection.logout()
+            serverConnection.close()
             self.statusBar.showMessage("Complete ✓", 2000)
 
         except Exception as error:
