@@ -1,4 +1,4 @@
-import datetime, imaplib, functools, ssl
+import datetime, imaplib, functools, ssl, sys
 from PyQt5 import QtWidgets, uic, QtCore
 from utils import paths, StorageSingleton
 from ui.utils import helpers
@@ -14,6 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.showMinimized()
 
         self.uiAction_about.triggered.connect(self.actionAbout)
+        self.uiAction_close.triggered.connect(self.quit)
 
         self.uiItems = []
         #load data
@@ -36,6 +37,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.deleteEmailsAllAccounts)
         self.timer.start(36000000)
+
+    def quit(self):
+        sys.exit()
     
     def addNewEmail(self):
         logger.info("Add new Email")
