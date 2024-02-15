@@ -11,6 +11,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
+        self.showMinimized()
 
         self.uiAction_about.triggered.connect(self.actionAbout)
 
