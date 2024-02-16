@@ -13,7 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
         self.showMinimized()
 
-        self.uiAction_about.triggered.connect(self.actionAbout)
+        self.uiAction_about.triggered.connect(self.showActionAbout)
         self.uiAction_close.triggered.connect(self.quit)
 
         self.uiItems = []
@@ -31,17 +31,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if len(self.uiItems) == 0:
             self.uiItems.append(self.createEmailForm())
-        self.uiButton_add.clicked.connect(self.addNewEmail)
-        self.uiButton_save.clicked.connect(self.store)
+        self.uiButton_add.clicked.connect(self.buttonClickedAddEmail)
+        self.uiButton_save.clicked.connect(self.storeEmailData)
 
         self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.deleteEmailsAllAccounts)
+        self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(36000000)
 
     def quit(self):
         sys.exit()
     
-    def addNewEmail(self):
+    def buttonClickedAddEmail(self):
         logger.info("Add new Email")
         self.uiItems.append(self.createEmailForm())
 
@@ -97,13 +97,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
 
         logger.info("Connect buttons")
-        uiItems["deleteNow"].clicked.connect(functools.partial(self.deleteNow, uiItems))
+        uiItems["deleteNow"].clicked.connect(functools.partial(self.buttonClickedDeleteNow, uiItems))
         uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
 
         return uiItems
 
-    def deleteNow(self, uiItems):
-        self.store()
+    def buttonClickedDeleteNow(self, uiItems):
+        self.storeEmailData()
         logger.info("Delete all emails of %s before date" % str(uiItems["email"].text()))
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
         self.statusBar.showMessage("Deleted ✓",2000)
@@ -113,19 +113,14 @@ class MainWindow(QtWidgets.QMainWindow):
         listWidgetItem.setHidden(True)
         self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
         del self.uiItems[self.uiItems.index(items)]
-        self.store()
+        self.storeEmailData()
 
-    def deleteEmailsAllAccounts(self):
-        self.store()
+    def timerTimoutDeleteEmails(self):
+        self.storeEmailData()
         logger.info("Delete emails from all accounts")
         if len(self.uiItems) != 0:
             for emailAccount in self.uiItems:
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
-
-    def store(self):
-        logger.info("Store data")
-        self.statusBar.showMessage("Saved ✓", 2000)
-        StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
 
     def deleteEmails(self, emailValues):
         # Check if all credentials were entered
@@ -174,8 +169,13 @@ class MainWindow(QtWidgets.QMainWindow):
             helpers.createMessageWindow(self, error)
             return
         
-    def actionAbout(self, *args):
+    def showActionAbout(self, *args):
         logger.info("Showing About Dialog...")
         self.about = AboutDialog()
         self.about.show()
         result = self.about.exec_()
+
+    def storeEmailData(self):
+        logger.info("Store data")
+        self.statusBar.showMessage("Saved ✓", 2000)
+        StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
