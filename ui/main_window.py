@@ -28,6 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.uiItems[index]["port"].setValue(singletonData["port"])
             self.uiItems[index]["expiryDate"].setCurrentText(helpers.DateToDateString(singletonData["expiryDate"]))
             self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
+            self.uiItems[index]["groupBox"].setTitle(singletonData["email"])
 
         if len(self.uiItems) == 0:
             self.uiItems.append(self.createEmailForm())
@@ -47,6 +48,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def createEmailForm(self):
         logger.info("Create ui Items")
+
+        # Create uiItems
         uiLineEdit_email            = QtWidgets.QLineEdit()
         uiLineEdit_password         = QtWidgets.QLineEdit()
         uiLineEdit_emailServer      = QtWidgets.QLineEdit()
@@ -56,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails', self)
         uiButton_deleteEmail        = QtWidgets.QPushButton('-', self)
 
+        # Set standart Values
         uiSpinBox_port.setMaximum(99999)
         uiSpinBox_port.setValue(933)
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
@@ -73,7 +77,16 @@ class MainWindow(QtWidgets.QMainWindow):
         formLayout.addRow(QtWidgets.QLabel("start_tls"), uiCheckbox_startTls)
         formLayout.addRow(uiButton_deleteEmail, uiButton_deleteNow)
 
-        uiItems = {"email":           uiLineEdit_email, 
+
+        logger.info("Add items")
+        groupBox = QtWidgets.QGroupBox("New Email")
+        groupBox.setLayout(formLayout)
+
+        self.uiLayout_emails.addWidget(groupBox)
+
+        uiItems = {
+                   "groupBox": groupBox,
+                   "email":           uiLineEdit_email, 
                    "password":        uiLineEdit_password, 
                    "emailServer":     uiLineEdit_emailServer, 
                    "port":            uiSpinBox_port,
@@ -83,22 +96,9 @@ class MainWindow(QtWidgets.QMainWindow):
                    "deleteEmail":     uiButton_deleteEmail,
                 }
 
-        logger.info("Add items")
-        # Put QForm in a widget
-        formWidget = QtWidgets.QWidget()
-        formWidget.setLayout(formLayout)
-
-        # Put widget in a qlistwidget item
-        listWidgetItem = QtWidgets.QListWidgetItem()
-        listWidgetItem.setSizeHint(formWidget.sizeHint())
-
-        # Add everything into the Listwidget
-        self.uiWidget_emails.addItem(listWidgetItem)
-        self.uiWidget_emails.setItemWidget(listWidgetItem, formWidget)
-
         logger.info("Connect buttons")
         uiItems["deleteNow"].clicked.connect(functools.partial(self.buttonClickedDeleteNow, uiItems))
-        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, listWidgetItem))
+        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, groupBox))
 
         return uiItems
 
@@ -108,9 +108,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
         self.statusBar.showMessage("Deleted ✓",2000)
 
-    def deleteEmailAccount(self, items, listWidgetItem):
+    def deleteEmailAccount(self, items, groupBox):
         logger.info("Delete email form")
-        listWidgetItem.setHidden(True)
+        groupBox.hide()
         self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
         del self.uiItems[self.uiItems.index(items)]
         self.storeEmailData()
@@ -179,3 +179,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger.info("Store data")
         self.statusBar.showMessage("Saved ✓", 2000)
         StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
+
+        # Set groupBox title to email
+        for uiItem in self.uiItems:
+            uiItem["groupBox"].setTitle(uiItem["email"].text())
