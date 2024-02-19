@@ -37,12 +37,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.uiButton_save.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogApplyButton))
 
-
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(36000000)
 
+    def closeEvent(self, event):
+        self.quit()
+
     def quit(self):
+        self.storeEmailData()
         sys.exit()
     
     def buttonClickedAddEmail(self):
@@ -67,7 +70,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiSpinBox_port.setValue(933)
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
-        uiButton_deleteEmail.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogCloseButton))
+        uiButton_deleteEmail.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogDiscardButton))
         uiButton_deleteNow.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TrashIcon))
 
         uiLineEdit_email.setPlaceholderText("Email@example.com") 
