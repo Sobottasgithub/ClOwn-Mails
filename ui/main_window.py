@@ -70,6 +70,10 @@ class MainWindow(QtWidgets.QMainWindow):
         uiButton_deleteEmail.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogCloseButton))
         uiButton_deleteNow.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TrashIcon))
 
+        uiLineEdit_email.setPlaceholderText("Email@example.com") 
+        uiLineEdit_password.setPlaceholderText("password") 
+        uiLineEdit_emailServer.setPlaceholderText("imap.mail.com") 
+
         logger.info("Create email form")
         # Add items to QForm
         formLayout = QtWidgets.QFormLayout()
