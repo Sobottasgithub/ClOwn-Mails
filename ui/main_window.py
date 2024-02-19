@@ -35,6 +35,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiButton_add.clicked.connect(self.buttonClickedAddEmail)
         self.uiButton_save.clicked.connect(self.storeEmailData)
 
+        self.uiButton_save.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogApplyButton))
+
+
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(36000000)
@@ -57,14 +60,15 @@ class MainWindow(QtWidgets.QMainWindow):
         uiCombobox_expiryDate       = QtWidgets.QComboBox()
         uiCheckbox_startTls         = QtWidgets.QCheckBox()
         uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails', self)
-        uiButton_deleteEmail        = QtWidgets.QPushButton('-', self)
+        uiButton_deleteEmail        = QtWidgets.QPushButton(self)
 
         # Set standart Values
         uiSpinBox_port.setMaximum(99999)
         uiSpinBox_port.setValue(933)
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
-
+        uiButton_deleteEmail.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogCloseButton))
+        uiButton_deleteNow.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TrashIcon))
 
         logger.info("Create email form")
         # Add items to QForm
