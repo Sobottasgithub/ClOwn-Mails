@@ -168,11 +168,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 resp,data = serverConnection.uid('fetch',uid,"(BODY[HEADER])")             
                 serverConnection.uid('STORE',uid, '+FLAGS', '(\\Deleted)')
             serverConnection.expunge()
-                
+
+            logger.info("Close connection")
+            serverConnection.close() 
             logger.info("Logout")
             serverConnection.logout()
-            logger.info("Close connection")
-            serverConnection.close()
             self.statusBar.showMessage("Complete ✓", 2000)
 
         except Exception as error:
