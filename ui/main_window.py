@@ -1,5 +1,5 @@
 import datetime, imaplib, functools, ssl, sys
-from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from utils import paths, StorageSingleton
 from ui.utils import helpers
 from .about_dialog import AboutDialog
@@ -35,7 +35,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.uiButton_add.clicked.connect(self.buttonClickedAddEmail)
         self.uiButton_save.clicked.connect(self.storeEmailData)
 
-        self.uiButton_save.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogApplyButton))
+        self.uiButton_save.setIcon(QtGui.QIcon(paths.get_art_filepath("actionOk.png")))
+        self.uiButton_add.setIcon(QtGui.QIcon(paths.get_art_filepath("actionAdd.png")))
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
@@ -70,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiSpinBox_port.setValue(933)
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
-        uiButton_deleteEmail.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogDiscardButton))
+        uiButton_deleteEmail.setIcon(QtGui.QIcon(paths.get_art_filepath("actionRemove.png")))
         uiButton_deleteNow.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TrashIcon))
 
         uiLineEdit_email.setPlaceholderText("Email@example.com") 

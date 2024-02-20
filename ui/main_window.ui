@@ -28,7 +28,7 @@
            <x>0</x>
            <y>0</y>
            <width>721</width>
-           <height>480</height>
+           <height>469</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -72,7 +72,7 @@
       <item>
        <widget class="QPushButton" name="uiButton_add">
         <property name="text">
-         <string>+</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -86,7 +86,7 @@
      <x>0</x>
      <y>0</y>
      <width>743</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
