@@ -13,7 +13,10 @@ def get_ui_filepath(filename):
     return os.path.abspath(os.path.join(get_basedir_path(), "ui", filename))
 
 def user_data_dir():
-    return platformdirs.user_data_dir(*PLATFORM_ARGS, roaming=True)
+    return os.path.abspath(platformdirs.user_data_dir(*PLATFORM_ARGS, roaming=True))
+
+def user_log_dir():
+    return os.path.abspath(platformdirs.user_log_dir(*PLATFORM_ARGS))
 
 def get_default_conf_filepath(filename):
     return os.path.abspath(os.path.join(get_basedir_path(), "data", "conf", filename))
