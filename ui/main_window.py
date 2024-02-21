@@ -11,7 +11,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
-        self.showMinimized()
 
         self.uiAction_about.triggered.connect(self.showActionAbout)
         self.uiAction_close.triggered.connect(self.quit)
@@ -41,9 +40,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(36000000)
-
-    def closeEvent(self, event):
-        self.quit()
 
     def quit(self):
         self.storeEmailData()

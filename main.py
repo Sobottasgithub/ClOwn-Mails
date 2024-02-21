@@ -29,6 +29,16 @@ logger = logging.getLogger(__name__)
 logger.info('Logger configured...')
 
 app = QtWidgets.QApplication(sys.argv)
+
+# initialize gui
+from ui import TrayIcon, MainWindow
 window = MainWindow()
+tray_icon = TrayIcon(window)
+window.tray_icon = tray_icon
+tray_icon.show()
+# show and hide again to properly initialize it (we sometimes get an empty window otherwise)
 window.show()
+window.hide()
+
+# run qt mainloop
 app.exec_()
