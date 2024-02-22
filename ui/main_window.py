@@ -43,7 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def quit(self):
         self.storeEmailData()
-        sys.exit()
+        QtWidgets.QApplication.quit()
     
     def buttonClickedAddEmail(self):
         logger.info("Add new Email")
