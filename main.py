@@ -6,7 +6,7 @@ from ui import MainWindow
 from utils import paths
 
 # parse commandline
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description="Monal Log Viewer")
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description="CLOwn-Mails")
 parser.add_argument("file", type=str, help="Directly load given file", nargs="?")
 parser.add_argument("--log", metavar='LOGLEVEL', help="Loglevel to log", default="DEBUG")
 args = parser.parse_args()
