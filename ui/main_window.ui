@@ -101,6 +101,9 @@
    <property name="toolTip">
     <string>Add Email</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
   </action>
  </widget>
  <resources/>
