@@ -74,6 +74,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiLineEdit_email.setPlaceholderText("Email@example.com") 
         uiLineEdit_password.setPlaceholderText("password") 
         uiLineEdit_emailServer.setPlaceholderText("imap.mail.com") 
+        uiCombobox_expiryDate.currentIndex(uiCombobox_expiryDate.findText("1 Year"))
 
         # Store data onchange
         uiLineEdit_email.textChanged.connect(self.storeEmailData)
@@ -94,8 +95,9 @@ class MainWindow(QtWidgets.QMainWindow):
         formLayout.addRow(QtWidgets.QLabel("start_tls"), uiCheckbox_startTls)
         formLayout.addRow(uiButton_deleteEmail, uiButton_deleteNow)
 
-
         logger.info("Add items")
+
+        # Create widget
         groupBox = QtWidgets.QGroupBox("New Email")
         groupBox.setLayout(formLayout)
 
