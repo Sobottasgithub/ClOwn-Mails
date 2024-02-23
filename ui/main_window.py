@@ -33,9 +33,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
             self.uiItems[index]["groupBox"].setTitle(singletonData["email"])
 
-        self.uiButton_save.clicked.connect(self.storeEmailData)
-        self.uiButton_save.setIcon(QtGui.QIcon(paths.get_art_filepath("actionOk.png")))
-
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(36000000)
@@ -72,6 +69,14 @@ class MainWindow(QtWidgets.QMainWindow):
         uiLineEdit_email.setPlaceholderText("Email@example.com") 
         uiLineEdit_password.setPlaceholderText("password") 
         uiLineEdit_emailServer.setPlaceholderText("imap.mail.com") 
+
+        # Store data onchange
+        uiLineEdit_email.textChanged.connect(self.storeEmailData)
+        uiLineEdit_password.textChanged.connect(self.storeEmailData)
+        uiLineEdit_emailServer.textChanged.connect(self.storeEmailData)
+        uiSpinBox_port.valueChanged.connect(self.storeEmailData)
+        uiCombobox_expiryDate.currentTextChanged.connect(self.storeEmailData)
+        uiCheckbox_startTls.stateChanged.connect(self.storeEmailData)
 
         logger.info("Create email form")
         # Add items to QForm
@@ -184,7 +189,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def storeEmailData(self):
         logger.info("Store data")
-        self.statusBar.showMessage("Saved ✓", 2000)
         StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
 
         # Set groupBox title to email
