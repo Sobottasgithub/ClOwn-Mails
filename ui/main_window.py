@@ -15,6 +15,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.uiAction_about.triggered.connect(self.showActionAbout)
         self.uiAction_close.triggered.connect(self.quit)
+        self.uiAction_add.triggered.connect(self.actionTriggeredAddEmail)
+
+        self.uiAction_add.setIcon(QtGui.QIcon(paths.get_art_filepath("actionAdd.png")))
 
         self.uiItems = []
         #load data
@@ -30,13 +33,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
             self.uiItems[index]["groupBox"].setTitle(singletonData["email"])
 
-        if len(self.uiItems) == 0:
-            self.uiItems.append(self.createEmailForm())
-        self.uiButton_add.clicked.connect(self.buttonClickedAddEmail)
         self.uiButton_save.clicked.connect(self.storeEmailData)
-
         self.uiButton_save.setIcon(QtGui.QIcon(paths.get_art_filepath("actionOk.png")))
-        self.uiButton_add.setIcon(QtGui.QIcon(paths.get_art_filepath("actionAdd.png")))
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
@@ -46,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.storeEmailData()
         QtWidgets.QApplication.quit()
     
-    def buttonClickedAddEmail(self):
+    def actionTriggeredAddEmail(self):
         logger.info("Add new Email")
         self.uiItems.append(self.createEmailForm())
 

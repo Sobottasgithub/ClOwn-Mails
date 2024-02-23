@@ -28,7 +28,7 @@
            <x>0</x>
            <y>0</y>
            <width>721</width>
-           <height>469</height>
+           <height>480</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -69,13 +69,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="uiButton_add">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -86,13 +79,15 @@
      <x>0</x>
      <y>0</y>
      <width>743</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="uiAction_add"/>
+    <addaction name="separator"/>
     <addaction name="uiAction_about"/>
     <addaction name="uiAction_close"/>
    </widget>
@@ -121,6 +116,14 @@
    </property>
    <property name="toolTip">
     <string>uiAction_close</string>
+   </property>
+  </action>
+  <action name="uiAction_add">
+   <property name="text">
+    <string>add</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Email</string>
    </property>
   </action>
  </widget>
