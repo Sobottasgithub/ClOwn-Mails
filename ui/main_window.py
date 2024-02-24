@@ -50,7 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger.info("Add new Email")
         self.uiItems.append(self.createEmailForm())
 
-    def createEmailForm(self):
+    def createEmailForm(self, *args):
         logger.info("Create ui Items")
 
         # Create uiItems
@@ -74,7 +74,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiLineEdit_email.setPlaceholderText("Email@example.com") 
         uiLineEdit_password.setPlaceholderText("password") 
         uiLineEdit_emailServer.setPlaceholderText("imap.mail.com") 
-        uiCombobox_expiryDate.currentIndex(uiCombobox_expiryDate.findText("1 Year"))
+        uiCombobox_expiryDate.setCurrentIndex(uiCombobox_expiryDate.findText("1 Year"))
 
         # Store data onchange
         uiLineEdit_email.textChanged.connect(self.storeEmailData)
