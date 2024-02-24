@@ -50,7 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger.info("Add new Email")
         self.uiItems.append(self.createEmailForm())
 
-    def createEmailForm(self, *args):
+    def createEmailForm(self):
         logger.info("Create ui Items")
 
         # Create uiItems
