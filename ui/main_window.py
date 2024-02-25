@@ -40,7 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
-        self.timer.start(36000000)
+        self.timer.start(3600000)
 
     def quit(self):
         self.storeEmailData()
@@ -60,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uiSpinBox_port              = QtWidgets.QSpinBox()
         uiCombobox_expiryDate       = QtWidgets.QComboBox()
         uiCheckbox_startTls         = QtWidgets.QCheckBox()
-        uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails', self)
+        uiButton_deleteNow          = QtWidgets.QPushButton('Delete emails now', self)
         uiButton_deleteEmail        = QtWidgets.QPushButton(self)
 
         # Set standart Values
