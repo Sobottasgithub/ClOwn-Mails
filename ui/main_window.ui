@@ -28,7 +28,7 @@
            <x>0</x>
            <y>0</y>
            <width>721</width>
-           <height>511</height>
+           <height>504</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -55,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>743</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -72,7 +72,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="uiAction_about">
    <property name="text">
-    <string>about</string>
+    <string>About</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
@@ -88,7 +88,7 @@
   </action>
   <action name="uiAction_close">
    <property name="text">
-    <string>close</string>
+    <string>Schließen</string>
    </property>
    <property name="toolTip">
     <string>uiAction_close</string>
@@ -96,7 +96,7 @@
   </action>
   <action name="uiAction_add">
    <property name="text">
-    <string>add</string>
+    <string>Hinzufügen</string>
    </property>
    <property name="toolTip">
     <string>Add Email</string>

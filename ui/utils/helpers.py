@@ -20,9 +20,9 @@ def uiItemsToValues(uiItems):
     return data
 
 def dateStringToDate(dateString):
-    dateStrings = {"1 Day": 1, "4 Days": 4, "1 Week": 7, "2 Weeks": 14, "1 Month": 31, "4 Months": 122, "6 Months": 183, "1 Year": 365}
+    dateStrings = {"1 Tag": 1, "4 Tage": 4, "1 Woche": 7, "2 Wochen": 14, "1 Monat": 31, "4 Monate": 122, "6 Monate": 183, "1 Jahr": 365}
     return dateStrings[dateString]
 
 def DateToDateString(date):
-    dateStrings = {1: "1 Day", 4: "4 Days", 7: "1 Week", 14: "2 Weeks", 31: "1 Month", 122: "4 Months", 183: "6 Months", 365: "1 Year"}
+    dateStrings = {1: "1 Tag", 4: "4 Tage", 7: "1 Woche", 14: "2 Wochen", 31: "1 Monat", 122: "4 Monate", 183: "6 Monate", 365: "1 Jahr"}
     return dateStrings[date]

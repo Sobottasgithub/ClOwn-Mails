@@ -66,15 +66,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # Set standart Values
         uiSpinBox_port.setMaximum(99999)
         uiSpinBox_port.setValue(993)
-        uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
+        uiCombobox_expiryDate.addItems(["1 Tag", "4 Tage", "1 Woche", "2 Wochen", "1 Monat", "4 Monate", "6 Monate", "1 Jahr"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
         uiButton_deleteEmail.setIcon(QtGui.QIcon(paths.get_art_filepath("actionRemove.png")))
         uiButton_deleteNow.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TrashIcon))
 
         uiLineEdit_email.setPlaceholderText("Email@example.com") 
-        uiLineEdit_password.setPlaceholderText("password") 
+        uiLineEdit_password.setPlaceholderText("passwort") 
         uiLineEdit_emailServer.setPlaceholderText("imap.mail.com") 
-        uiCombobox_expiryDate.setCurrentIndex(uiCombobox_expiryDate.findText("1 Year"))
+        uiCombobox_expiryDate.setCurrentIndex(uiCombobox_expiryDate.findText("1 Jahr"))
 
         # Store data onchange
         uiLineEdit_email.textChanged.connect(self.storeEmailData)
@@ -88,23 +88,23 @@ class MainWindow(QtWidgets.QMainWindow):
         # Add items to QForm
         formLayout = QtWidgets.QFormLayout()
         formLayout.addRow(QtWidgets.QLabel("Email"), uiLineEdit_email)
-        formLayout.addRow(QtWidgets.QLabel("Password"), uiLineEdit_password)
+        formLayout.addRow(QtWidgets.QLabel("Passwort"), uiLineEdit_password)
         formLayout.addRow(QtWidgets.QLabel("Emailserver"), uiLineEdit_emailServer)
         formLayout.addRow(QtWidgets.QLabel("Port"), uiSpinBox_port)
-        formLayout.addRow(QtWidgets.QLabel("Expirydate"), uiCombobox_expiryDate)
+        formLayout.addRow(QtWidgets.QLabel("Verfallsdatum"), uiCombobox_expiryDate)
         formLayout.addRow(QtWidgets.QLabel("start_tls"), uiCheckbox_startTls)
         formLayout.addRow(uiButton_deleteEmail, uiButton_deleteNow)
 
         logger.info("Add items")
 
         # Create widget
-        groupBox = QtWidgets.QGroupBox("New Email")
+        groupBox = QtWidgets.QGroupBox("Neue Email")
         groupBox.setLayout(formLayout)
 
         self.uiLayout_emails.addWidget(groupBox)
 
         uiItems = {
-                   "groupBox": groupBox,
+                   "groupBox":        groupBox,
                    "email":           uiLineEdit_email, 
                    "password":        uiLineEdit_password, 
                    "emailServer":     uiLineEdit_emailServer, 
@@ -125,12 +125,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.storeEmailData()
         logger.info("Delete all emails of %s before date" % str(uiItems["email"].text()))
         self.deleteEmails(helpers.uiItemsToValues(uiItems))
-        self.statusBar.showMessage("Deleted ✓",2000)
+        self.statusBar.showMessage("Gelöscht ✓",2000)
 
     def deleteEmailAccount(self, items, groupBox):
         logger.info("Delete email form")
         groupBox.hide()
-        self.statusBar.showMessage("Deleted user: %s ✓" % items["email"].text(), 2000)
+        self.statusBar.showMessage("Email-Konto gelöscht: %s ✓" % items["email"].text(), 2000)
         del self.uiItems[self.uiItems.index(items)]
         self.storeEmailData()
 
@@ -145,7 +145,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Check if all credentials were entered
         for data in emailValues.values():
             if data == "":
-                helpers.createMessageWindow(self, "Not all credentials were entered")
+                helpers.createMessageWindow(self, "Nicht alle Felder wurden korrekt ausgefüllt")
                 return
         try:
             if emailValues["startTls"]:
@@ -153,7 +153,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 tls_context = ssl.create_default_context()
             
             # Connect to server
-            self.statusBar.showMessage("Connecting to server...")
+            self.statusBar.showMessage("Die Verbindung zum Server wird hergestellt...")
             logger.info("Connecting to server '%s' on port %s..." % (emailValues["emailServer"], emailValues["port"]))
             serverConnection = imaplib.IMAP4_SSL(emailValues["emailServer"], emailValues["port"])
             if emailValues["startTls"]:
@@ -167,7 +167,7 @@ class MainWindow(QtWidgets.QMainWindow):
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
             logger.info("Deleting everything before %s " % str(beforeDate))
 
-            self.statusBar.showMessage("Deleting ...")
+            self.statusBar.showMessage("Löscht...")
             resp, data = serverConnection.uid('search',None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
@@ -180,7 +180,7 @@ class MainWindow(QtWidgets.QMainWindow):
             serverConnection.close() 
             logger.info("Logout")
             serverConnection.logout()
-            self.statusBar.showMessage("Complete ✓", 2000)
+            self.statusBar.showMessage("Fertig ✓", 2000)
 
         except Exception as error:
             logger.info("E R R O R while deleting emails! %s " % str(error))
