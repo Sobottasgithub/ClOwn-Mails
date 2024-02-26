@@ -181,6 +181,14 @@ class MainWindow(QtWidgets.QMainWindow):
             logger.info("Logout")
             serverConnection.logout()
             self.statusBar.showMessage("Fertig ✓", 2000)
+            
+            if len(uids) > 0:
+                self.tray_icon.showMessage(
+                    "ClOwn-Mails",
+                    "Es wurden erfolgreich %d Emails gelöscht!" % len(uids),
+                    QtWidgets.QSystemTrayIcon.Information,
+                    4000
+                )
 
         except Exception as error:
             logger.info("E R R O R while deleting emails! %s " % str(error))
