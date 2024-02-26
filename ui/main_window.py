@@ -154,12 +154,12 @@ class MainWindow(QtWidgets.QMainWindow):
             
             # Connect to server
             self.statusBar.showMessage("Connecting to server...")
-            logger.info("Connecting to server...")
+            logger.info("Connecting to server '%s' on port %s..." % (emailValues["emailServer"], emailValues["port"]))
             serverConnection = imaplib.IMAP4_SSL(emailValues["emailServer"], emailValues["port"])
             if emailValues["startTls"]:
                 serverConnection.starttls(ssl_context=tls_context)
             self.statusBar.showMessage("Logging in...")
-            logger.info("Logging in...")
+            logger.info("Logging in as '%s'..." % emailValues["email"])
             serverConnection.login(emailValues["email"], emailValues["password"])
 
             # Search for emails
