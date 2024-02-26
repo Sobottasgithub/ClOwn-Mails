@@ -65,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Set standart Values
         uiSpinBox_port.setMaximum(99999)
-        uiSpinBox_port.setValue(933)
+        uiSpinBox_port.setValue(993)
         uiCombobox_expiryDate.addItems(["1 Day", "4 Days", "1 Week", "2 Weeks", "1 Month", "4 Months", "6 Months", "1 Year"])
         uiLineEdit_password.setEchoMode(QtWidgets.QLineEdit.Password)
         uiButton_deleteEmail.setIcon(QtGui.QIcon(paths.get_art_filepath("actionRemove.png")))
