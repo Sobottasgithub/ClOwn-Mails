@@ -10,7 +10,7 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
         self.main_window = main_window
 
         # Set icon
-        self.setIcon(QtGui.QIcon(paths.get_art_filepath("clownLogo.png")))
+        self.setIcon(QtGui.QIcon(paths.get_art_filepath("icon.png")))
         self.setVisible(True) 
 
         # Create trayMenu
