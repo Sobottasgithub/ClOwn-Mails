@@ -62,7 +62,7 @@ jobs:
         pip install --upgrade Pillow
         pip install --upgrade tk
         pip install --upgrade tcl
-        pip install --upgrade -r src/requirements.txt
+        pip install --upgrade -r requirements.txt
     - name: Extract version string
       run: echo "VERSION='${{ github.ref_name }}'" >utils/version.py
     - name: Build with pyinstaller for ${{matrix.TARGET}}
