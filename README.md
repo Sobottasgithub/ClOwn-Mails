@@ -2,4 +2,4 @@
 
 Cleanup Own Mails
 
-<img src="src/data/art/clownLogo.png" width="200" height="200" />
+<img src="src/data/art/icon.png" width="200" height="200" />
