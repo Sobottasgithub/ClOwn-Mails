@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>608</width>
-    <height>413</height>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
           <x>0</x>
           <y>0</y>
           <width>586</width>
-          <height>343</height>
+          <height>215</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -56,13 +56,9 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Ist IMAP bereits aktiviert?
-Suchen Sie online nach Anleitungen, um IMAP bei Ihrem Anbieter zu aktivieren,
-und prüfen Sie, ob Ihr Anbieter IMAPS unterstützt.
-
-Thunderbird Guide:
-https://support.mozilla.org/en-US/kb/switch-pop-imap-account
-</string>
+               <string>Suchen Sie sich die Anleitung Ihres Mailanbieters zur Einrichtung von IMAP mit dem Thunderbird Mailclient und 
+ benutzen Sie die dort angegebenen Werte für Mailserver und Portnummer. 
+ Sollten Sie unsicher sein, so können Sie die Portnummer bei ihrem Standardwert 993 belassen.</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
