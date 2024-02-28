@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 from ui.utils import helpers
 from utils import paths
@@ -43,6 +43,7 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
             4000
         )
 
+    @QtCore.pyqtSlot()
     def updateApplication(self):
         github = Github()
         hasUpdate = github.hasUpdate()
@@ -51,7 +52,6 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
                 github.downloadUpdate()
             except Exception as error:
                 helpers.createMessageWindow(self.main_window, error)
-                self.close
 
     def toggleWindowVisibility(self):
         if self.main_window.isVisible():
