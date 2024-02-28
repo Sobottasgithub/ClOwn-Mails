@@ -7,13 +7,27 @@ from net import Github
 import logging
 logger = logging.getLogger(__name__)
 
+class DownloadWorker(QtCore.QObject):
+    def run(self):
+        github = Github()
+        hasUpdate = github.hasUpdate()
+        if hasUpdate == True:
+            try:
+                github.downloadUpdate()
+            except Exception as error:
+                helpers.createMessageWindow(self.main_window, error)
+
 class TrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, main_window):
         super().__init__()
 
         self.main_window = main_window
 
-        self.updateApplication()
+        self.thread = QtCore.QThread()
+        self.worker = DownloadWorker()
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.thread.start()
 
         # Set icon
         self.setIcon(QtGui.QIcon(paths.get_art_filepath("icon.png")))
@@ -42,16 +56,6 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
             QtWidgets.QSystemTrayIcon.Information,
             4000
         )
-
-    @QtCore.pyqtSlot()
-    def updateApplication(self):
-        github = Github()
-        hasUpdate = github.hasUpdate()
-        if hasUpdate == True:
-            try:
-                github.downloadUpdate()
-            except Exception as error:
-                helpers.createMessageWindow(self.main_window, error)
 
     def toggleWindowVisibility(self):
         if self.main_window.isVisible():
