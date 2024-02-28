@@ -60,14 +60,9 @@
 Suchen Sie online nach Anleitungen, um IMAP bei Ihrem Anbieter zu aktivieren,
 und prüfen Sie, ob Ihr Anbieter IMAPS unterstützt.
 
-Nutzen Sie Thunderbird? Dann folgen Sie diesem Guide:
-1. Open the File &gt; New &gt; Existing account menu
-2. Richten Sie Ihr Konto mithilfe des Assistenten ein.
-3. Wenn gefragt wird, ob Sie POP oder IMAP verwenden möchten, wählen Sie IMAP (remote folders).
-4. Ihr neues IMAP-Konto wird erstellt und erscheint am unteren Ende Ihrer vorhandenen E-Mail-Konten.
-
-Genaueres unter:
-https://support.mozilla.org/en-US/kb/switch-pop-imap-account</string>
+Thunderbird Guide:
+https://support.mozilla.org/en-US/kb/switch-pop-imap-account
+</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
