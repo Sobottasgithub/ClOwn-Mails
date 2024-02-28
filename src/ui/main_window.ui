@@ -28,7 +28,7 @@
            <x>0</x>
            <y>0</y>
            <width>721</width>
-           <height>504</height>
+           <height>511</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -55,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>743</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -65,6 +65,7 @@
     <addaction name="uiAction_add"/>
     <addaction name="separator"/>
     <addaction name="uiAction_about"/>
+    <addaction name="uiAction_help"/>
     <addaction name="uiAction_close"/>
    </widget>
    <addaction name="menuFile"/>
@@ -75,7 +76,7 @@
     <string>About</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+H</string>
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="uiAction_about_2">
@@ -103,6 +104,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="uiAction_help">
+   <property name="text">
+    <string>Hilfe</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
  </widget>

@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from utils import paths, StorageSingleton
 from ui.utils import helpers
 from .about_dialog import AboutDialog
+from .help_dialog import HelpDialog
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowIcon(QtGui.QIcon(paths.get_art_filepath("icon.png")))
 
         self.uiAction_about.triggered.connect(self.showActionAbout)
+        self.uiAction_help.triggered.connect(self.showActionHelp)
         self.uiAction_close.triggered.connect(self.quit)
         self.uiAction_add.triggered.connect(self.actionTriggeredAddEmail)
 
@@ -201,6 +203,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.about = AboutDialog()
         self.about.show()
         result = self.about.exec_()
+
+    def showActionHelp(self, *args):
+        logger.info("Showing Help Dialog...")
+        self.help = HelpDialog()
+        self.help.show()
+        result = self.help.exec_()
 
     def storeEmailData(self):
         logger.info("Store data")
