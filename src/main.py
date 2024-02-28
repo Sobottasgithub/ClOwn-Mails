@@ -12,6 +12,7 @@ args = parser.parse_args()
 
 os.makedirs(paths.user_data_dir(), exist_ok=True)
 os.makedirs(paths.user_log_dir(), exist_ok=True)
+os.makedirs(paths.user_cache_dir(), exist_ok=True)
 
 import json, logging, logging.config
 try:

@@ -26,3 +26,6 @@ def get_conf_filepath(filename):
 
 def get_art_filepath(filename):
     return os.path.abspath(os.path.join(get_basedir_path(), "data", "art", filename))
+
+def user_cache_dir():
+    return platformdirs.user_cache_dir(*PLATFORM_ARGS)

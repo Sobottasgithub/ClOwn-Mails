@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtGui
 from utils import paths
+from net import Github
 
 import logging
 logger = logging.getLogger(__name__)
@@ -7,7 +8,10 @@ logger = logging.getLogger(__name__)
 class TrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, main_window):
         super().__init__()
+
         self.main_window = main_window
+
+        self.updateApplication()
 
         # Set icon
         self.setIcon(QtGui.QIcon(paths.get_art_filepath("icon.png")))
@@ -36,6 +40,12 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
             QtWidgets.QSystemTrayIcon.Information,
             4000
         )
+
+    def updateApplication(self):
+        github = Github(self.main_window)
+        hasUpdate = github.hasUpdate()
+        if hasUpdate == True:
+            github.downloadUpdate()
 
     def toggleWindowVisibility(self):
         if self.main_window.isVisible():
