@@ -33,7 +33,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright 2024 Patrick Schulze&lt;br/&gt;Project Homepage: &lt;span style=&quot; text-decoration: underline; color:#1a5fb4;&quot;&gt;https://github.com/Sobottasgithub/ClOwn-Mails/&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright 2024 Patrick Schulze&lt;br/&gt;Project Homepage: &lt;span style=&quot; text-decoration: underline; color:#1a5fb4;&quot;&gt;https://github.com/Sobottasgithub/ClOwn-Mails/&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Crystal Clear Icons Pack: &lt;span style=&quot; text-decoration: underline; color:#1a5fb4;&quot;&gt;http://www.iconarchive.com/show/crystal-clear-icons-by-everaldo.1.html&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
