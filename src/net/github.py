@@ -7,16 +7,14 @@ from packaging import version
 from collections import defaultdict
 
 from utils import paths
-from ui.utils import helpers
 from utils.version import VERSION, GITHUB_USER, GITHUB_PROJECT
 
 import logging
 logger = logging.getLogger(__name__)
 
 class Github():
-    def __init__(self, window):
+    def __init__(self):
         super().__init__()
-        self.window = window
 
     def hasUpdate(self):
         if VERSION == "Bleeding edge (master branch)":
@@ -61,7 +59,6 @@ class Github():
 
         # don't auto-replace if not using packaged executable
         if not (getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')):
-            helpers.createMessageWindow(self.window, "Bitte Update manuell von hier installieren: %s" % path)
             raise Exception("Bitte Update manuell von hier installieren: %s" % path)
 
         # auto-replace executable, if possible (on darwin only open dmg file)
@@ -75,7 +72,6 @@ class Github():
         elif platform.system() == "Darwin":
             logger.info("Opening newly downloaded dmg file at '%s' and showing alert to user..." % path)
             os.system("open %s" % path)
-            helpers.createMessageWindow(self.window, "Bitte Update manuell von hier installieren: %s" % path)
             raise Exception("Bitte Update manuell von hier installieren: %s" % path)
         else:
             logger.info("Replacing currently running executable at '%s' and respawning..." % sys.executable)

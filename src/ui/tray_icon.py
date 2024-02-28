@@ -1,4 +1,6 @@
 from PyQt5 import QtWidgets, QtGui
+
+from ui.utils import helpers
 from utils import paths
 from net import Github
 
@@ -42,10 +44,14 @@ class TrayIcon(QtWidgets.QSystemTrayIcon):
         )
 
     def updateApplication(self):
-        github = Github(self.main_window)
+        github = Github()
         hasUpdate = github.hasUpdate()
         if hasUpdate == True:
-            github.downloadUpdate()
+            try:
+                github.downloadUpdate()
+            except Exception as error:
+                helpers.createMessageWindow(self.main_window, error)
+                self.close
 
     def toggleWindowVisibility(self):
         if self.main_window.isVisible():
