@@ -151,7 +151,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
         try:
             if emailValues["startTls"]:
-                logger.info("establishe connection with start_tls")
+                logger.info("Establishe connection with start_tls...")
                 tls_context = ssl.create_default_context()
             
             # Connect to server
@@ -170,7 +170,8 @@ class MainWindow(QtWidgets.QMainWindow):
             logger.info("Deleting everything before %s " % str(beforeDate))
 
             self.statusBar.showMessage("Löscht...")
-            resp, data = serverConnection.uid('search',None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
+            resp, data = serverConnection.uid('search', None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
+            data = data.encode('utf-8')
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
             for uid in uids:
