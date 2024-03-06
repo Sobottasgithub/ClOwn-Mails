@@ -170,12 +170,12 @@ class MainWindow(QtWidgets.QMainWindow):
             logger.info("Deleting everything before %s " % str(beforeDate))
 
             self.statusBar.showMessage("Löscht...")
-            resp, data = serverConnection.uid('search',None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
+            resp, data = serverConnection.uid('search','CHARSET', 'UTF-8', '(BEFORE {0})'.format(beforeDate)) # search and return Uids
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
             for uid in uids:
-                resp,data = serverConnection.uid('fetch',uid,"(BODY[HEADER])")             
-                serverConnection.uid('STORE',uid, '+FLAGS', '(\\Deleted)')
+                resp,data = serverConnection.uid('fetch','CHARSET', 'UTF-8', uid,"(BODY[HEADER])")             
+                serverConnection.uid('STORE','CHARSET', 'UTF-8', uid, '+FLAGS', '(\\Deleted)')
             serverConnection.expunge()
 
             logger.info("Close connection")
