@@ -171,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.statusBar.showMessage("Löscht...")
             resp, data = serverConnection.uid('search', None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
-            data = data.encode('utf-8')
+            data = [entry.decode() for entry in data]
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
             for uid in uids:
@@ -194,7 +194,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 )
 
         except Exception as error:
-            logger.info("E R R O R while deleting emails! %s " % str(error))
+            logger.error("E R R O R while deleting emails! %s " % str(error))
             self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
             helpers.createMessageWindow(self, error)
             return
