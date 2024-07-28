@@ -1,4 +1,4 @@
-import datetime, imaplib, functools, ssl, sys
+import datetime, imaplib, functools, ssl, requests
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from utils import paths, StorageSingleton
 from ui.utils import helpers
@@ -144,6 +144,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.deleteEmails(helpers.uiItemsToValues(emailAccount))
 
     def deleteEmails(self, emailValues):
+        if not self.isConnectedToInternet():
+            return
         # Check if all credentials were entered
         for data in emailValues.values():
             if data == "":
@@ -218,3 +220,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # Set groupBox title to email
         for uiItem in self.uiItems:
             uiItem["groupBox"].setTitle(uiItem["email"].text())
+
+    def isConnectedToInternet(self):
+        try:
+            logger.debug("Checking for internet connection...")
+            result = requests.head("https://www.google.com/", timeout=8)
+            return True
+        except requests.ConnectionError:
+            logger.warning("No connection to the Internet!")
+            return False
