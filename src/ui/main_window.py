@@ -40,6 +40,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
                 helpers.createMessageWindow(self, error)
 
+        if len(StorageSingleton()["data"]) == 0:
+            self.createEmailForm()
+
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
         self.timer.start(3600000)
