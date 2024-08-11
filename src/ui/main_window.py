@@ -125,9 +125,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def buttonClickedDeleteNow(self, uiItems):
         self.storeEmailData()
-        logger.info("Delete all emails of %s before date" % str(uiItems["email"].text()))
-        self.deleteEmails(helpers.uiItemsToValues(uiItems))
-        self.statusBar.showMessage("Gelöscht ✓",2000)
+        deleteEmails = helpers.createConfirmationWindow(self, "Delete emails now?")
+        if deleteEmails:
+            logger.info("Delete all emails of %s before date" % str(uiItems["email"].text()))
+            self.deleteEmails(helpers.uiItemsToValues(uiItems))
+            self.statusBar.showMessage("Gelöscht ✓",2000)
 
     def deleteEmailAccount(self, items, groupBox):
         deleteEmailAccount = helpers.createConfirmationWindow(self, "Do you really want to delete this Email account from ClOwn-Mails?")
