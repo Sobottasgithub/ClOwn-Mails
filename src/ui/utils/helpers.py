@@ -9,6 +9,18 @@ def createMessageWindow(window, message):
     )
     return msgBox
 
+def createConfirmationWindow(window, message):
+    msgBox = QtWidgets.QMessageBox.question(
+        window,
+        "ClOwn-Mails | WARNING", 
+        str(message),
+        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel
+    )
+    if msgBox == QtWidgets.QMessageBox.Ok:
+        return True
+    if msgBox == QtWidgets.QMessageBox.Cancel:
+        return False
+
 def uiItemsToValues(uiItems):
     data = {}
     data["emailServer"] =  uiItems["emailServer"].text()

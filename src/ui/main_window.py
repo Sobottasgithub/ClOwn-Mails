@@ -130,11 +130,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusBar.showMessage("Gelöscht ✓",2000)
 
     def deleteEmailAccount(self, items, groupBox):
-        logger.info("Delete email form")
-        groupBox.hide()
-        self.statusBar.showMessage("Email-Konto gelöscht: %s ✓" % items["email"].text(), 2000)
-        del self.uiItems[self.uiItems.index(items)]
-        self.storeEmailData()
+        deleteEmailAccount = helpers.createConfirmationWindow(self, "Do you really want to delete this Email account from ClOwn-Mails?")
+        if deleteEmailAccount:
+            logger.info("Delete email form")
+            groupBox.hide()
+            self.statusBar.showMessage("Email-Konto gelöscht: %s ✓" % items["email"].text(), 2000)
+            del self.uiItems[self.uiItems.index(items)]
+            self.storeEmailData()
 
     def timerTimoutDeleteEmails(self):
         self.storeEmailData()
@@ -177,8 +179,8 @@ class MainWindow(QtWidgets.QMainWindow):
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
             for uid in uids:
-                resp,data = serverConnection.uid('fetch',uid,"(BODY[HEADER])")             
-                serverConnection.uid('STORE',uid, '+FLAGS', '(\\Deleted)')
+                resp,data = serverConnection.uid('fetch', uid, "(BODY[HEADER])")
+                serverConnection.uid('STORE', uid, '+FLAGS', '(\\Deleted)')
             serverConnection.expunge()
 
             logger.info("Close connection")
