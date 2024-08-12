@@ -176,10 +176,10 @@ class MainWindow(QtWidgets.QMainWindow):
             # Search for emails
             serverConnection.select('Inbox')
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
-            logger.info("Deleting everything before %s " % str(beforeDate))
+            logger.info("Deleting everything before %s that is not FLAGGED" % str(beforeDate))
 
             self.statusBar.showMessage("Löscht...")
-            resp, data = serverConnection.uid('search', None, '(BEFORE {0})'.format(beforeDate)) # search and return Uids
+            resp, data = serverConnection.uid("search", None, "(NOT FLAGGED) (BEFORE {0})".format(beforeDate)) # search and return Uids
             data = [entry.decode() for entry in data]
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
