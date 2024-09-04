@@ -23,18 +23,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.uiItems = []
         #load data
-        for index in range(len(StorageSingleton()["data"])):
+        for entry in StorageSingleton()["data"]:
             try:
                 self.uiItems.append(self.createEmailForm())
-                singletonData = StorageSingleton()["data"][index]
-                logger.info("Create email form for %s" % singletonData["email"])
-                self.uiItems[index]["email"].setText(singletonData["email"])
-                self.uiItems[index]["password"].setText(singletonData["password"])
-                self.uiItems[index]["emailServer"].setText(singletonData["emailServer"])
-                self.uiItems[index]["port"].setValue(singletonData["port"])
-                self.uiItems[index]["expiryDate"].setCurrentText(helpers.DateToDateString(singletonData["expiryDate"]))
-                self.uiItems[index]["startTls"].setChecked(singletonData["startTls"])
-                self.uiItems[index]["groupBox"].setTitle(singletonData["email"])
+                logger.info("Create email form for %s" % entry["email"])
+                self.uiItems[-1]["email"].setText(entry["email"])
+                self.uiItems[-1]["password"].setText(entry["password"])
+                self.uiItems[-1]["emailServer"].setText(entry["emailServer"])
+                self.uiItems[-1]["port"].setValue(entry["port"])
+                self.uiItems[-1]["expiryDate"].setCurrentText(helpers.DateToDateString(entry["expiryDate"]))
+                self.uiItems[-1]["startTls"].setChecked(entry["startTls"])
+                self.uiItems[-1]["groupBox"].setTitle(entry["email"])
             except Exception as error:
                 logger.info("E R R O R while loading email account data & creating uiItems! %s " % str(error))
                 self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
