@@ -226,17 +226,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         data = [helpers.uiItemsToValues(data) for data in self.uiItems]
 
-        for index in range(len(self.uiItems)-1,-1,-1):
-            uiItem = list(self.uiItems[index].values())
-            textItem = list(data[index].values())
-            for itemIndex in range(len(data[index])):
-                logger.debug(f"Setting: {itemIndex} = {textItem[itemIndex]}")
-                if textItem[itemIndex] == "":
-                    uiItem[itemIndex+1].setStyleSheet("background-color: #f00")
-                    del data[index]
-                    break
-                else:
-                    uiItem[itemIndex+1].setStyleSheet("")
+        for item in self.uiItems[::-1]:
+            for key in item:
+                # Only the QLineEdits can be empty
+                if isinstance(item[key], QtWidgets.QLineEdit):
+                    if len(item[key].text().strip()) == 0:
+                        item[key].setStyleSheet("background-color: #f00")
+                        del data[self.uiItems.index(item)]
+                        break
+                    else:
+                        item[key].setStyleSheet("")
 
         StorageSingleton()["data"] = data
 
