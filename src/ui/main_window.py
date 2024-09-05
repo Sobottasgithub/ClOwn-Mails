@@ -1,4 +1,4 @@
-import datetime, imaplib, functools, ssl, requests
+import datetime, locale, imaplib, functools, ssl, requests
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from utils import paths, StorageSingleton
 from ui.utils import helpers
@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        locale.setlocale(locale.LC_TIME, 'C')       # make sure the time is formatted correctly
+        
         uic.loadUi(paths.get_ui_filepath("main_window.ui"), self)
         self.setWindowIcon(QtGui.QIcon(paths.get_art_filepath("icon.png")))
 
@@ -35,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.uiItems[-1]["startTls"].setChecked(entry["startTls"])
                 self.uiItems[-1]["groupBox"].setTitle(entry["email"])
             except Exception as error:
-                logger.info("E R R O R while loading email account data & creating uiItems! %s " % str(error))
+                logger.exception("E R R O R while loading email account data & creating uiItems!")
                 self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
                 helpers.createMessageWindow(self, error)
 
@@ -171,12 +173,14 @@ class MainWindow(QtWidgets.QMainWindow):
             serverConnection.login(emailValues["email"], emailValues["password"])
 
             # Search for emails
+            logger.info("Selecting inbox...")
             serverConnection.select('Inbox')
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
             logger.info("Deleting everything before %s that is not FLAGGED" % str(beforeDate))
 
             self.statusBar.showMessage("Löscht...")
-            resp, data = serverConnection.uid("search", None, "(NOT FLAGGED) BEFORE {0}".format(beforeDate)) # search and return Uids
+            resp, data = serverConnection.uid("search", None, f"(NOT FLAGGED) BEFORE {beforeDate}") # search and return Uids
+            logger.debug("Search returned data: %s" % data)
             data = [entry.decode() for entry in data]
             uids = data[0].split()    
             logger.info("Deleting %d mails" % len(uids))
@@ -200,7 +204,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 )
 
         except Exception as error:
-            logger.error("E R R O R while deleting emails! %s " % str(error))
+            logger.exception("E R R O R while deleting emails!")
             self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
             helpers.createMessageWindow(self, error)
             return
@@ -226,7 +230,7 @@ class MainWindow(QtWidgets.QMainWindow):
             uiItem = list(self.uiItems[index].values())
             textItem = list(data[index].values())
             for itemIndex in range(len(data[index])):
-                logger.debug(textItem[itemIndex])
+                logger.debug(f"Setting: {itemIndex} = {textItem[itemIndex]}")
                 if textItem[itemIndex] == "":
                     uiItem[itemIndex+1].setStyleSheet("background-color: #f00")
                     del data[index]
