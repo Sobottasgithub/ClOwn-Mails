@@ -23,10 +23,10 @@ def createConfirmationWindow(window, message):
 
 def uiItemsToValues(uiItems):
     data = {}
-    data["emailServer"] =  uiItems["emailServer"].text()
-    data["port"] = uiItems["port"].value()
     data["email"] = uiItems["email"].text()
     data["password"] = uiItems["password"].text()
+    data["emailServer"] =  uiItems["emailServer"].text()
+    data["port"] = uiItems["port"].value()
     data["expiryDate"] = dateStringToDate(uiItems["expiryDate"].currentText())
     data["startTls"] = uiItems["startTls"].isChecked()
     return data

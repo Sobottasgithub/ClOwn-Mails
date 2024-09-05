@@ -118,7 +118,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         logger.info("Connect buttons")
         uiItems["deleteNow"].clicked.connect(functools.partial(self.buttonClickedDeleteNow, uiItems))
-        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, groupBox))
+        uiItems["deleteEmail"].clicked.connect(functools.partial(self.deleteEmailAccount, uiItems, groupBox, True))
 
         return uiItems
 
@@ -130,9 +130,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.deleteEmails(helpers.uiItemsToValues(uiItems))
             self.statusBar.showMessage("Gelöscht ✓",2000)
 
-    def deleteEmailAccount(self, items, groupBox):
-        deleteEmailAccount = helpers.createConfirmationWindow(self, "Do you really want to delete this Email account from ClOwn-Mails?")
-        if deleteEmailAccount:
+    def deleteEmailAccount(self, items, groupBox, confirmation=False):
+        if confirmation == True:
+            deleteEmailAccount = helpers.createConfirmationWindow(self, "Do you really want to delete this Email account from ClOwn-Mails?")
+        if confirmation == False or deleteEmailAccount:
             logger.info("Delete email form")
             groupBox.hide()
             self.statusBar.showMessage("Email-Konto gelöscht: %s ✓" % items["email"].text(), 2000)
@@ -152,7 +153,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Check if all credentials were entered
         for data in emailValues.values():
             if data == "":
-                helpers.createMessageWindow(self, "Nicht alle Felder wurden korrekt ausgefüllt")
+                logger.warning("Not all input fields were filled out!")
                 return
         try:
             if emailValues["startTls"]:
@@ -218,7 +219,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def storeEmailData(self):
         logger.info("Store data")
-        StorageSingleton()["data"] = [helpers.uiItemsToValues(data) for data in self.uiItems]
+
+        data = [helpers.uiItemsToValues(data) for data in self.uiItems]
+
+        for index in range(len(self.uiItems)-1,-1,-1):
+            uiItem = list(self.uiItems[index].values())
+            textItem = list(data[index].values())
+            for itemIndex in range(len(data[index])):
+                logger.debug(textItem[itemIndex])
+                if textItem[itemIndex] == "":
+                    uiItem[itemIndex+1].setStyleSheet("background-color: #f00")
+                    del data[index]
+                    break
+                else:
+                    uiItem[itemIndex+1].setStyleSheet("")
+
+        StorageSingleton()["data"] = data
 
         # Set groupBox title to email
         for uiItem in self.uiItems:
