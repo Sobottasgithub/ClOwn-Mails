@@ -26,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for entry in StorageSingleton()["data"]:
             try:
                 self.uiItems.append(self.createEmailForm())
+                logger.debug(f"---------------{entry['email'] = }")
                 logger.info("Create email form for %s" % entry["email"])
                 self.uiItems[-1]["email"].setText(entry["email"])
                 self.uiItems[-1]["password"].setText(entry["password"])
@@ -38,9 +39,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 logger.info("E R R O R while loading email account data & creating uiItems! %s " % str(error))
                 self.statusBar.showMessage("E R R O R: %s " % str(error), 2000)
                 helpers.createMessageWindow(self, error)
-
-        if len(StorageSingleton()["data"]) == 0:
-            self.createEmailForm()
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerTimoutDeleteEmails)
@@ -175,6 +173,9 @@ class MainWindow(QtWidgets.QMainWindow):
             # Search for emails
             serverConnection.select('Inbox')
             beforeDate = (datetime.date.today() - datetime.timedelta(emailValues["expiryDate"])).strftime("%d-%b-%Y")
+            logger.debug("-"*50)
+            logger.debug(f"{beforeDate = }")
+            logger.debug("-"*50)
             logger.info("Deleting everything before %s that is not FLAGGED" % str(beforeDate))
 
             self.statusBar.showMessage("Löscht...")
